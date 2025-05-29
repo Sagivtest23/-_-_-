@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>עמרי מחשבים בע"מ - תיקוני מחשבים ושיפורים</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Light Mode Variables */
+            --primary-blue: #0288d1; /* Deep Sky Blue */
+            --secondary-blue: #1E88E5; /* Dodger Blue */
+            --light-blue: #E3F2FD; /* Light Blue background for sections */
+            --dark-text: #263238; /* Dark Slate Gray */
+            --light-bg: #F5F5F5; /* Very Light Gray */
+            --white: #FFFFFF;
+            --shadow-light: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-hover: 0 8px 20px rgba(2, 136, 209, 0.3);
+            --border-radius: 10px;
+            --button-radius: 30px;
+            --footer-bg: var(--white);
+            --footer-color: #666;
+            --footer-border: 1px solid #E0E0E0;
+        }
+
+        /* Dark Mode Variables */
+        body.dark-mode {
+            --primary-blue: #0A6BB3; /* Slightly darker blue for dark mode */
+            --secondary-blue: #3E8AD7; /* Adjusted secondary blue */
+            --light-blue: #1A3E62; /* Darker blue for sections */
+            --dark-text: #E0E0E0; /* Light gray text */
+            --light-bg: #121212; /* Very dark background */
+            --white: #2C2C2C; /* Darker white for cards/elements */
+            --shadow-light: 0 4px 12px rgba(0,0,0,0.4);
+            --shadow-hover: 0 8px 20px rgba(10, 107, 179, 0.6);
+            --footer-bg: #1C1C1C;
+            --footer-color: #A0A0A0;
+            --footer-border: 1px solid #333333;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Assistant', sans-serif;
+            background: var(--light-bg);
+            margin: 0;
+            padding: 0;
+            color: var(--dark-text);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            direction: rtl; /* Default for Hebrew */
+            text-align: right; /* Default for Hebrew */
+            line-height: 1.6;
+            transition: background 0.3s ease, color 0.3s ease; /* Smooth transition for theme change */
+        }
+
+        header {
+            background: var(--primary-blue);
+            color: var(--white);
+            padding: 25px 40px;
+            text-align: center;
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            box-shadow: var(--shadow-light);
+            user-select: none;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .controls-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px auto 40px;
+            max-width: 900px;
+            padding: 0 20px;
+            flex-wrap: wrap;
+        }
+
+        nav {
+            margin: 0 auto; /* Adjust margin as it's now inside controls-container */
+            max-width: 900px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            padding: 0 15px;
+        }
+
+        nav button {
+            background: var(--white);
+            border: none;
+            padding: 14px 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            border-radius: var(--button-radius);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            font-weight: 600;
+            color: var(--primary-blue);
+            min-width: 140px;
+            user-select: none;
+            flex-shrink: 0;
+        }
+
+        nav button[aria-selected="true"],
+        nav button:hover {
+            background: var(--secondary-blue);
+            color: var(--white);
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-3px);
+        }
+
+        main {
+            flex-grow: 1;
+            max-width: 900px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+        }
+
+        section[role="tabpanel"] {
+            background: var(--white);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-light);
+            display: none;
+            animation: fadeIn 0.6s ease-out forwards;
+            margin-bottom: 25px; /* Add some margin below sections */
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        section[role="tabpanel"].active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {opacity: 0; transform: translateY(20px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--primary-blue);
+            border-bottom: 3px solid var(--secondary-blue);
+            padding-bottom: 10px;
+            user-select: none;
+            font-weight: 700;
+            transition: color 0.3s ease, border-color 0.3s ease;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid; /* Use grid for better control */
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+        }
+
+        ul li {
+            background: var(--light-blue);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+            border-radius: var(--border-radius);
+            padding: 20px 25px;
+            transition: all 0.3s ease;
+            user-select: text;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        ul li:hover {
+            box-shadow: 0 7px 18px rgba(2, 136, 209, 0.4);
+            transform: translateY(-5px) scale(1.02);
+            background: linear-gradient(135deg, var(--light-blue) 0%, var(--primary-blue) 100%);
+        }
+
+        ul li:hover a {
+            color: var(--white);
+            text-decoration: none;
+        }
+
+        ul li a {
+            text-decoration: none;
+            color: var(--primary-blue);
+            font-weight: 600;
+            font-size: 1.1rem;
+            display: block;
+            width: 100%; /* Ensure link takes full space */
+            transition: color 0.3s ease;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.95rem;
+            color: var(--footer-color);
+            border-top: var(--footer-border);
+            user-select: none;
+            background: var(--footer-bg);
+            margin-top: 40px;
+            transition: background 0.3s ease, color 0.3s ease, border-top 0.3s ease;
+        }
+
+        /* Language Selector */
+        #languageSelector, #themeSelector {
+            display: block;
+            font-size: 1.05rem;
+            padding: 10px 18px;
+            border-radius: var(--button-radius);
+            border: 2px solid var(--primary-blue);
+            background: var(--white);
+            color: var(--primary-blue);
+            font-weight: 600;
+            max-width: 200px;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.3s ease;
+            text-align: center;
+            -webkit-appearance: none; /* Remove default arrow on WebKit browsers */
+            -moz-appearance: none; /* Remove default arrow on Firefox */
+            appearance: none; /* Remove default arrow */
+            background-repeat: no-repeat, repeat;
+            background-position: left 15px center, 0 0; /* Adjusted position for better centering */
+            background-size: 12px auto, 100%;
+            padding-right: 40px; /* Make space for the custom arrow */
+        }
+
+        #languageSelector {
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%230288d1%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-6.5%200-12.3%203.2-16.1%208.1-3.9%204.9-4.8%2011.6-2.5%2017.7l126.5%20161.4c3.5%204.4%208.5%207.1%2014%207.1s10.5-2.7%2014-7.1L289.4%2090.8c2.4-6.1%201.5-12.8-2.3-17.7z%22%2F%3E%3C%2Fsvg%3E');
+        }
+        
+        #languageSelector:hover, #themeSelector:hover {
+            background-color: var(--primary-blue);
+            color: var(--white);
+            box-shadow: 0 5px 15px rgba(2, 136, 209, 0.4);
+            border-color: var(--secondary-blue);
+        }
+        #languageSelector:hover option, #themeSelector:hover option {
+            background-color: var(--primary-blue); /* keep options styled when hovered */
+            color: var(--white);
+        }
+
+        /* Adjust arrow color for dark mode */
+        body.dark-mode #languageSelector {
+             background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23E0E0E0%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-6.5%200-12.3%203.2-16.1%208.1-3.9%204.9-4.8%2011.6-2.5%2017.7l126.5%20161.4c3.5%204.4%208.5%207.1%2014%207.1s10.5-2.7%2014-7.1L289.4%2090.8c2.4-6.1%201.5-12.8-2.3-17.7z%22%2F%3E%3C%2Fsvg%3E');
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            header {
+                font-size: 1.8rem;
+                padding: 20px 20px;
+            }
+
+            .controls-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+                margin: 20px auto;
+            }
+
+            nav {
+                margin: 0;
+                gap: 10px;
+                padding: 0 10px;
+            }
+
+            nav button {
+                padding: 12px 20px;
+                font-size: 1rem;
+                min-width: unset;
+            }
+
+            main {
+                padding: 0 15px;
+            }
+
+            section[role="tabpanel"] {
+                padding: 25px;
+            }
+
+            h3 {
+                font-size: 1.5rem;
+                margin-bottom: 15px;
+            }
+
+            ul {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 15px;
+            }
+
+            ul li {
+                padding: 15px 20px;
+            }
+
+            #languageSelector, #themeSelector {
+                max-width: 160px;
+                font-size: 0.95rem;
+                padding: 8px 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            nav {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            nav button {
+                width: 100%;
+            }
+
+            ul {
+                grid-template-columns: 1fr; /* Stack items on very small screens */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header id="headerTitle">עמרי מחשבים בע"מ</header>
+
+    <div class="controls-container">
+        <select id="languageSelector" aria-label="בחר שפה">
+            <option value="he">עברית</option>
+            <option value="en">English</option>
+            <option value="ar">العربية</option>
+            <option value="ru">Русский</option>
+        </select>
+
+        <select id="themeSelector" aria-label="בחר ערכת נושא">
+            <option value="light">מצב בהיר</option>
+            <option value="dark">מצב כהה</option>
+        </select>
+    </div>
+
+    <nav role="tablist" aria-label="בחר קטגוריה">
+        <button role="tab" aria-selected="true" aria-controls="performance" id="tab-performance">שיפור ביצועים</button>
+        <button role="tab" aria-selected="false" aria-controls="internet" id="tab-internet">תיקון אינטרנט</button>
+        <button role="tab" aria-selected="false" aria-controls="viruses" id="tab-viruses">הסרת וירוסים</button>
+    </nav>
+
+    <main>
+        <section role="tabpanel" id="performance" class="active" tabindex="0">
+            <h3>שיפור ביצועי המחשב שלך</h3>
+            <ul id="performanceLinks"></ul>
+        </section>
+        <section role="tabpanel" id="internet" tabindex="0">
+            <h3>תיקון בעיות אינטרנט</h3>
+            <ul id="internetLinks"></ul>
+        </section>
+        <section role="tabpanel" id="viruses" tabindex="0">
+            <h3>הסרת וירוסים ותוכנות זדוניות</h3>
+            <ul id="virusLinks"></ul>
+        </section>
+    </main>
+
+    <footer>
+        כל הזכויות שמורות לעמרי מחשבים בע"מ &copy; 2025
+    </footer>
+
+    <script>
+        const translations = {
+            he: {
+                header: 'עמרי מחשבים בע"מ',
+                tabs: ["שיפור ביצועים", "תיקון אינטרנט", "הסרת וירוסים"],
+                titles: [
+                    "שיפור ביצועי המחשב שלך",
+                    "תיקון בעיות אינטרנט",
+                    "הסרת וירוסים ותוכנות זדוניות"
+                ],
+                themeOptions: {
+                    light: "מצב בהיר",
+                    dark: "מצב כהה"
+                },
+                footer: 'כל הזכויות שמורות לעמרי מחשבים בע"מ &copy; 2025',
+                links: {
+                    performance: [
+                        ["הפעל מחדש את המחשב שלך", "https://support.microsoft.com/he-il/windows/restart-reboot-your-pc-110262aa-fc79-1c33-7b00-c140ae3a6dac"],
+                        ["נקה קבצי טמפ ונתוני מטמון", "https://helpcenter.trendmicro.com/en-us/article/tmka-20576"],
+                        ["עדכן דרייברים לגרפיקות", "https://helpcenter.trendmicro.com/en-us/article/tmka-11234"],
+                    ],
+                    internet: [
+                        ["אתחל את הנתב", "https://www.wikihow.com/Manually-Reset-Your-Wireless-Adapter-in-Windows"],
+                        ["בדוק את חיבור האינטרנט", "https://www.speedtest.net/"],
+                        ["שנה DNS ל-Google DNS", "https://developers.google.com/speed/public-dns/docs/using"],
+                    ],
+                    viruses: [
+                        ["הפעל סריקה עם Malwarebytes", "https://www.reddit.com/r/Malwarebytes/comments/14bo0h7/how_do_i_run_a_full_scan/"],
+                        ["עדכן והפעל את Windows Defender", "https://www.ias.edu/security/getting-started-with-windows-security-windows-defender"],
+                        ["התקן אנטי וירוס חינמי Avast", "https://www.avast.com/lp-ppc-free-av-brand?full_trSrc=mmm_ava_tst_007_402_a&om_sem_cid=hho_sem_sy:~en-ww_ava_sch_brn_exc_adw_dtp~&utm_source=google&utm_medium=cpc&utm_campaign=en-ww_ava_sch_brn_exc_adw_dtp&gad_source=1&gad_campaignid=908893877&gbraid=0AAAAAD3FTMyNGSfZ4HegZbaUZUS1CiYp2&gclid=CjwKCAjwi-DBBhA5EiwAXOHsGZ7u0zKWTHJHVsgJTWzhB4D_kBpy708QmsIoKbfK867FpnRa1OtnrBoCwYQQAvD_BwE&gclsrc=aw.ds?full_trSrc=mmm_ava_tst_007_402_a&om_sem_cid=hho_sem_sy:~en-ww_ava_sch_brn_exc_adw_dtp~&utm_source=google&utm_medium=cpc&utm_campaign=en-ww_ava_sch_brn_exc_adw_dtp&gad_source=1&gad_campaignid=908893877&gbraid=0AAAAAD3FTMyNGSfZ4HegZbaUZUS1CiYp2&gclid=CjwKCAjwi-DBBhA5EiwAXOHsGZ7u0zKWTHJHVsgJTWzhB4D_kBpy708QmsIoKbfK867FpnRa1OtnrBoCwYQQAvD_BwE&gclsrc=aw.ds#pc"],
+                    ]
+                }
+            },
+            en: {
+                header: "Omri Computers Ltd.",
+                tabs: ["Performance Boost", "Internet Fixes", "Virus Removal"],
+                titles: [
+                    "Improve Your PC Performance",
+                    "Fix Internet Problems",
+                    "Remove Viruses and Malware"
+                ],
+                themeOptions: {
+                    light: "Light Mode",
+                    dark: "Dark Mode"
+                },
+                footer: 'All rights reserved to Omri Computers Ltd. &copy; 2025',
+                links: {
+                    performance: [
+                        ["Restart Your PC", "https://support.microsoft.com/en-us/windows/restart-reboot-your-pc-110262aa-fc79-1c33-7b00-c140ae3a6dac"],
+                        ["Clear Temporary Files & Cache", "https://helpcenter.trendmicro.com/en-us/article/tmka-20576"],
+                        ["Update Graphics Drivers", "https://helpcenter.trendmicro.com/en-us/article/tmka-11234"],
+                    ],
+                    internet: [
+                        ["Restart Your Router", "https://www.wikihow.com/Manually-Reset-Your-Wireless-Adapter-in-Windows"],
+                        ["Check Internet Connection", "https://www.speedtest.net/"],
+                        ["Change DNS to Google DNS", "https://developers.google.com/speed/public-dns/docs/using"],
+                    ],
+                    viruses: [
+                        ["Run Malwarebytes Scan", "https://www.reddit.com/r/Malwarebytes/comments/14bo0h7/how_do_i_run_a_full_scan/"],
+                        ["Update and Run Windows Defender", "https://www.ias.edu/security/getting-started-with-windows-security-windows-defender"],
+                        ["Install Free Avast Antivirus", "https://www.avast.com/lp-ppc-free-av-brand?full_trSrc=mmm_ava_tst_007_402_a&om_sem_cid=hho_sem_sy:~en-ww_ava_sch_brn_exc_adw_dtp~&utm_source=google&utm_medium=cpc&utm_campaign=en-ww_ava_sch_brn_exc_adw_dtp&gad_source=1&gad_campaignid=908893877&gbraid=0AAAAAD3FTMyNGSfZ4HegZbaUZUS1CiYp2&gclid=CjwKCAjwi-DBBhA5EiwAXOHsGZ7u0zKWTHJHVsgJTWzhB4D_kBpy708QmsIoKbfK867FpnRa1OtnrBoCwYQQAvD_BwE&gclsrc=aw.ds?full_trSrc=mmm_ava_tst_007_402_a&om_sem_cid=hho_sem_sy:~en-ww_ava_sch_brn_exc_adw_dtp~&utm_source=google&utm_medium=cpc&utm_campaign=en-ww_ava_sch_brn_exc_adw_dtp&gad_source=1&gad_campaignid=908893877&gbraid=0AAAAAD3FTMyNGSfZ4HegZbaUZUS1CiYp2&gclid=CjwKCAjwi-DBBhA5EiwAXOHsGZ7u0zKWTHJHVsgJTWzhB4D_kBpy708QmsIoKbfK867FpnRa1OtnrBoCwYQQAvD_BwE&gclsrc=aw.ds#pc"],
+                    ]
+                }
+            },
+            ar: {
+                header: "عمري كمبيوتر المحدودة",
+                tabs: ["تعزيز الأداء", "إصلاح الإنترنت", "إزالة الفيروسات"],
+                titles: [
+                    "تحسين أداء الكمبيوتر الخاص بك",
+                    "إصلاح مشاكل الإنترنت",
+                    "إزالة الفيروسات والبرامج الضارة"
+                ],
+                themeOptions: {
+                    light: "الوضع الفاتح",
+                    dark: "الوضع الداكن"
+                },
+                footer: 'جميع الحقوق محفوظة لعمري كمبيوتر المحدودة &copy; 2025',
+                links: {
+                    performance: [
+                        ["أعد تشغيل جهاز الكمبيوتر الخاص بك", "https://support.microsoft.com/ar-sa/windows/restart-reboot-your-pc-110262aa-fc79-1c33-7b00-c140ae3a6dac"],
+                        ["مسح الملفات المؤقتة وذاكرة التخزين المؤقت", "https://helpcenter.trendmicro.com/en-us/article/tmka-20576"],
+                        ["تحديث برامج تشغيل الرسومات", "https://helpcenter.trendmicro.com/en-us/article/tmka-11234"],
+                    ],
+                    internet: [
+                        ["إعادة تشغيل جهاز التوجيه", "https://www.wikihow.com/Manually-Reset-Your-Wireless-Adapter-in-Windows"],
+                        ["تحقق من اتصال الإنترنت", "https://www.speedtest.net/"],
+                        ["تغيير DNS إلى Google DNS", "https://developers.google.com/speed/public-dns/docs/using"],
+                    ],
+                    viruses: [
+                        ["تشغيل فحص Malwarebytes", "https://www.reddit.com/r/Malwarebytes/comments/14bo0h7/how_do_i_run_a_full_scan/"],
+                        ["تحديث وتشغيل Windows Defender", "https://www.ias.edu/security/getting-started-with-windows-security-windows-defender"],
+                        ["تثبيت مضاد فيروسات Avast مجاني", "https://www.avast.com/lp-ppc-free-av-brand?full_trSrc=mmm_ava_tst_007_402_a&om_sem_cid=hho_sem_sy:~en-ww_ava_sch_brn_exc_adw_dtp~&utm_source=google&utm_medium=cpc&utm_campaign=en-ww_ava_sch_brn_exc_adw_dtp&gad_source=1&gad_campaignid=908893877&gbraid=0AAAAAD3FTMyNGSfZ4HegZbaUZUS1CiYp2&gclid=CjwKCAjwi-DBBhA5EiwAXOHsGZ7u0zKWTHJHVsgJTWzhB4D_kBpy708QmsIoKbfK867FpnRa1OtnrBoCwYQQAvD_BwE&gclsrc=aw.ds?full_trSrc=mmm_ava_tst_007_402_a&om_sem_cid=hho_sem_sy:~en-ww_ava_sch_brn_exc_adw_dtp~&utm_source=google&utm_medium=cpc&utm_campaign=en-ww_ava_sch_brn_exc_adw_dtp&gad_source=1&gad_campaignid=908893877&gbraid=0AAAAAD3FTMyNGSfZ4HegZbaUZUS1CiYp2&gclid=CjwKCAjwi-DBBhA5EiwAXOHsGZ7u0zKWTHJHVsgJTWzhB4D_kBpy708QmsIoKbfK867FpnRa1OtnrBoCwYQQAvD_BwE&gclsrc=aw.ds#pc"],
+                    ]
+                }
+            },
+            ru: {
+                header: "Омри Компьютерс Лтд.",
+                tabs: ["Повышение производительности", "Исправление Интернета", "Удаление вирусов"],
+                titles: [
+                    "Повышение производительности вашего ПК",
+                    "Устранение проблем с Интернетом",
+                    "Удаление вирусов и вредоносных программ"
+                ],
+                themeOptions: {
+                    light: "Светлая тема",
+                    dark: "Темная тема"
+                },
+                footer: 'Все права защищены Омри Компьютерс Лтд. &copy; 2025',
+                links: {
+                    performance: [
+                        ["Перезагрузите компьютер", "https://support.microsoft.com/ru-ru/windows/restart-reboot-your-pc-110262aa-fc79-1c33-7b00-c140ae3a6dac"],
+                        ["Очистите временные файлы и кэш", "https://helpcenter.trendmicro.com/en-us/article/tmka-20576"],
+                        ["Обновите графические драйверы", "https://helpcenter.trendmicro.com/en-us/article/tmka-11234"],
+                    ],
+                    internet: [
+                        ["Перезагрузите маршрутизатор", "https://www.wikihow.com/Manually-Reset-Your-Wireless-Adapter-in-Windows"],
+                        ["Проверьте подключение к Интернету", "https://www.speedtest.net/"],
+                        ["Измените DNS на Google DNS", "https://developers.google.com/speed/public-dns/docs/using"],
+                    ],
+                    viruses: [
+                        ["Запустите сканирование Malwarebytes", "https://www.reddit.com/r/Malwarebytes/comments/14bo0h7/how_do_i_run_a_full_scan/"],
+                        ["Обновите и запустите Защитник Windows", "https://www.ias.edu/security/getting-started-with-windows-security-windows-defender"],
+                        ["Установите бесплатный антивирус Avast", "https://www.avast.com/lp-ppc-free-av-brand?full_trSrc=mmm_ava_tst_007_402_a&om_sem_cid=hho_sem_sy:~en-ww_ava_sch_brn_exc_adw_dtp~&utm_source=google&utm_medium=cpc&utm_campaign=en-ww_ava_sch_brn_exc_adw_dtp&gad_source=1&gad_campaignid=908893877&gbraid=0AAAAAD3FTMyNGSfZ4HegZbaUZUS1CiYp2&gclid=CjwKCAjwi-DBBhA5EiwAXOHsGZ7u0zKWTHJHVsgJTWzhB4D_kBpy708QmsIoKbfK867FpnRa1OtnrBoCwYQQAvD_BwE&gclsrc=aw.ds?full_trSrc=mmm_ava_tst_007_402_a&om_sem_cid=hho_sem_sy:~en-ww_ava_sch_brn_exc_adw_dtp~&utm_source=google&utm_medium=cpc&utm_campaign=en-ww_ava_sch_brn_exc_adw_dtp&gad_source=1&gad_campaignid=908893877&gbraid=0AAAAAD3FTMyNGSfZ4HegZbaUZUS1CiYp2&gclid=CjwKCAjwi-DBBhA5EiwAXOHsGZ7u0zKWTHJHVsgJTWzhB4D_kBpy708QmsIoKbfK867FpnRa1OtnrBoCwYQQAvD_BwE&gclsrc=aw.ds#pc"],
+                    ]
+                }
+            }
+        };
+
+        const languageSelector = document.getElementById('languageSelector');
+        const themeSelector = document.getElementById('themeSelector'); // New theme selector
+        const headerTitle = document.getElementById('headerTitle');
+        const tabs = document.querySelectorAll('nav button[role="tab"]');
+        const tabPanels = document.querySelectorAll('section[role="tabpanel"]');
+        const performanceLinks = document.getElementById('performanceLinks');
+        const internetLinks = document.getElementById('internetLinks');
+        const virusLinks = document.getElementById('virusLinks');
+        const footer = document.querySelector('footer'); // Get the footer element
+        const htmlElement = document.documentElement;
+
+        function renderLinks(category, container) {
+            container.innerHTML = '';
+            translations[currentLang].links[category].forEach(([text, url]) => {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = url;
+                a.target = "_blank";
+                a.rel = "noopener noreferrer";
+                a.textContent = text;
+                li.appendChild(a);
+                container.appendChild(li);
+            });
+        }
+
+        function updateContent(lang) {
+            headerTitle.textContent = translations[lang].header;
+
+            tabs.forEach((tab, i) => {
+                tab.textContent = translations[lang].tabs[i];
+            });
+
+            tabPanels.forEach((panel, i) => {
+                panel.querySelector('h3').textContent = translations[lang].titles[i];
+            });
+
+            // Update theme selector options
+            themeSelector.options[0].textContent = translations[lang].themeOptions.light;
+            themeSelector.options[1].textContent = translations[lang].themeOptions.dark;
+
+            footer.textContent = translations[lang].footer; // Update footer content
+
+            renderLinks('performance', performanceLinks);
+            renderLinks('internet', internetLinks);
+            renderLinks('viruses', virusLinks);
+        }
+
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+            // Store the chosen theme in local storage
+            localStorage.setItem('theme', theme);
+        }
+
+        let currentLang = 'he'; // Default language
+        languageSelector.value = currentLang;
+        updateContent(currentLang);
+
+        // Load saved theme from local storage or default to light
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        themeSelector.value = savedTheme;
+        setTheme(savedTheme);
+
+        languageSelector.addEventListener('change', (e) => {
+            currentLang = e.target.value;
+
+            // Set dir and text-align based on language
+            if(currentLang === 'ar' || currentLang === 'he') {
+                document.body.dir = 'rtl';
+                document.body.style.textAlign = 'right';
+                htmlElement.lang = currentLang;
+            } else {
+                document.body.dir = 'ltr';
+                document.body.style.textAlign = 'left';
+                htmlElement.lang = currentLang;
+            }
+            updateContent(currentLang);
+        });
+
+        themeSelector.addEventListener('change', (e) => {
+            setTheme(e.target.value);
+        });
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => {
+                    t.setAttribute('aria-selected', 'false');
+                });
+                tab.setAttribute('aria-selected', 'true');
+                const target = tab.getAttribute('aria-controls');
+                tabPanels.forEach(panel => {
+                    if(panel.id === target) {
+                        panel.classList.add('active');
+                        panel.focus();
+                    } else {
+                        panel.classList.remove('active');
+                    }
+                });
+            });
+        });
+
+        // Initialize active tab on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const initialActiveTab = document.querySelector('nav button[aria-selected="true"]');
+            if (initialActiveTab) {
+                const targetPanelId = initialActiveTab.getAttribute('aria-controls');
+                const targetPanel = document.getElementById(targetPanelId);
+                if (targetPanel) {
+                    targetPanel.classList.add('active');
+                    targetPanel.focus();
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
